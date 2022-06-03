@@ -21,15 +21,15 @@ type Person struct {
 	birthDay  time.Time
 }
 
-//People is a slice of type person
+// People is a slice of type person
 type People []Person
 
-//Len returns the length of input value
+// Len returns the length of input value
 func (p People) Len() int {
 	return len(p)
 }
 
-//Less reports when it is necessary to sort element i before element j
+// Less reports when it is necessary to sort element i before element j
 func (p People) Less(i, j int) bool {
 	if p[i].birthDay.Unix() == p[j].birthDay.Unix() {
 		if p[i].firstName == p[j].firstName {
@@ -40,14 +40,14 @@ func (p People) Less(i, j int) bool {
 	return p[i].birthDay.Unix() > p[j].birthDay.Unix()
 }
 
-//Swap swaps the elements with indexes i and j.
+// Swap swaps the elements with indexes i and j.
 func (p People) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Matrix stores an array of numbers in rows and columns
+// Matrix stores an array of numbers in rows and columns
 type Matrix struct {
 	rows, cols int
 	data       []int
@@ -107,4 +107,3 @@ func (m *Matrix) Set(row, col, value int) bool {
 	m.data[row*m.cols+col] = value
 	return true
 }
-

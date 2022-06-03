@@ -1,7 +1,9 @@
 package coverage
 
 import (
+	"errors"
 	"os"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -85,10 +87,6 @@ func TestLess(t *testing.T) {
 	}
 }
 
-// func expectedForSwap(p People) People {
-
-// } 
-
 func TestSwap(t *testing.T) {
 	tData := map[string]struct{
 		indexA int
@@ -107,6 +105,42 @@ func TestSwap(t *testing.T) {
 			if v.people[v.indexA] != oldB || v.people[v.indexB] != oldA {
 				t.Errorf("[%s] expected: %v got: %v", tName, oldA, v.people[v.indexB])
 			} 
+		})
+	}
+}
+
+var ErrLenght = errors.New("Rows need to be the same length")
+var _, ErrAtoi = strconv.Atoi("a")
+
+func TestNew(t *testing.T) {
+	tData := map[string]struct{
+		str string
+		Expected *Matrix
+		Err error
+	}{
+		"succes": {str: "12 2 3 \n 5 6 9 \n10 23 4", Expected: &Matrix{rows:3,cols:3,data: []int{12,2,3,5,6,9,10,232,4}}, Err: nil},
+		"errorLenght": {str: "1 2 \n 3", Expected: nil, Err: ErrLenght},
+		"errorAtoi": {str: "a\n a",Expected: nil, Err: ErrAtoi},
+	}
+	for tName, tCase := range tData {
+		v := tCase
+		t.Run(tName, func(t *testing.T) {
+			got,err := New(v.str)
+			check := false
+			if err != nil && err.Error() != v.Err.Error(){
+				t.Errorf("[%s] expected error: %v, got error: %v", tName, v.Err, err)
+			}
+			if v.Expected != nil {
+				for ind, i := range got.data {
+					if v.Expected.data[ind] != i {
+						check = true
+					}
+				}
+				if got.cols != v.Expected.cols || got.rows != v.Expected.rows || check {
+					t.Errorf("[%s] expected: %v, got: %v",tName, v.Expected, got)
+				}
+			}
+			
 		})
 	}
 }
