@@ -30,7 +30,7 @@ func NewPeopleMock() People {
 			birthDay: time.Date(1998,01,29,10,10,10,0,time.UTC),
 		},
 		Person{
-			firstName: "Bill",
+			firstName: "Bob",
 			lastName: "Bank",
 			birthDay:  time.Date(1980,10,15,0,0,0,0,time.UTC),
 		},
@@ -143,3 +143,79 @@ func TestNew(t *testing.T) {
 		})
 	}
 }
+
+func TestRows(t *testing.T) {
+	tData := map[string]struct{
+		matrix Matrix
+		Expected [][]int
+	}{
+		"succes": {matrix: Matrix{rows: 2,cols: 2, data: []int{2, 2, 3,6}}, Expected: [][]int{{2,2},{3,6}}},
+	}
+	for tName, tCase := range tData {
+		v := tCase
+		t.Run(tName, func(t *testing.T) {
+			got := v.matrix.Rows()
+			check := false
+			for index, i := range got {
+				for ind, num := range i {
+					if  v.Expected[index][ind] != num{
+						check = true
+						break
+					}
+				}
+			}
+			if check {
+				t.Errorf("[%s] expected %v got %v",tName,v.Expected, got)
+			}
+		})
+	}
+}
+
+func TestCols(t *testing.T) {
+	tData := map[string]struct{
+		matrix Matrix
+		Expected [][]int
+	}{
+		"succes": {matrix: Matrix{rows: 3, cols: 3,data: []int{1,2,3,4,5,6,7,8,9}},Expected: [][]int{{1,4,7},{2,5,8},{3,6,9}}},
+	}
+	for tName, tCase := range tData {
+		v := tCase
+		t.Run(tName, func(t *testing.T) {
+			got := v.matrix.Cols()
+			check := false
+			for index, i := range got {
+				for ind, num := range i {
+					if v.Expected[index][ind] != num {
+						check = true
+						break
+					}
+				}
+			}
+			if check {
+				t.Errorf("[%s] expected %v got %v", tName, v.Expected, got)
+			}
+		})
+	}
+}
+
+func TestSet(t *testing.T) {
+	tData := map[string]struct{
+		matrix *Matrix
+		Expected bool
+		row int
+		col int
+		val int
+	}{
+		"rows less 0": {matrix: &Matrix{rows: 2,cols: 2,data: []int{2,4,5,6}},Expected: false,row: -1,col: 2,val: 4},
+		"succes": {matrix:&Matrix{rows: 2,cols: 2,data: []int{2,4,5,6}},Expected: true,row: 1,col: 1,val: 2},
+	}
+	for tName, tCase := range tData {
+		v := tCase
+		t.Run(tName,func(t *testing.T) {
+			got := v.matrix.Set(v.row,v.col,v.val)
+			if got != v.Expected {
+				t.Errorf("[%s] expected %v got %v",tName, v.Expected, got)
+			}
+		})
+	}
+} 
